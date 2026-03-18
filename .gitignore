@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login Panel</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  height: 100vh;
+  background: url('bg.jpg') no-repeat center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 320px;
+  background: rgba(0,0,0,0.7);
+  padding: 30px;
+  border-radius: 15px;
+  color: white;
+}
+
+h2 {
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background: transparent;
+  border: 1px solid #ccc;
+  color: white;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: #4fc3dc;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.link {
+  text-align: center;
+  margin-top: 10px;
+  cursor: pointer;
+  color: #4fc3dc;
+}
+
+.whatsapp {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  color: white;
+  background: rgba(0,0,0,0.6);
+  padding: 8px;
+  border-radius: 20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LOGIN FORM -->
+  <div id="loginForm">
+    <h2>Login</h2>
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button>Login</button>
+
+    <div class="link" onclick="showRegister()">
+      Create Account
+    </div>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div id="registerForm" style="display:none;">
+    <h2>Create Account</h2>
+    <input type="text" placeholder="Full Name">
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button>Register</button>
+
+    <div class="link" onclick="showLogin()">
+      Back to Login
+    </div>
+  </div>
+
+</div>
+
+<div class="whatsapp">
+  WhatsApp: +919332539948
+</div>
+
+<script>
+function showRegister() {
+  document.getElementById("loginForm").style.display = "none";
+  document.getElementById("registerForm").style.display = "block";
+}
+
+function showLogin() {
+  document.getElementById("loginForm").style.display = "block";
+  document.getElementById("registerForm").style.display = "none";
+}
+</script>
+
+</body>
+</html>
