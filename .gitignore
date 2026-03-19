@@ -4,12 +4,17 @@
 <meta charset="UTF-8">
 <title>Login Panel</title>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
 <style>
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   height: 100vh;
-  background: url('bg.jpg') no-repeat center/cover;
+  background: url('bacround.jpg') no-repeat center;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,15 +22,16 @@ body {
 
 .container {
   width: 320px;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.5);
   padding: 30px;
   border-radius: 15px;
   color: white;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5);
 }
 
-h2 {
-  text-align: center;
-}
+h2 { text-align: center; }
 
 input {
   width: 100%;
@@ -34,6 +40,7 @@ input {
   background: transparent;
   border: 1px solid #ccc;
   color: white;
+  border-radius: 5px;
 }
 
 button {
@@ -43,7 +50,12 @@ button {
   border: none;
   color: white;
   cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-weight: bold;
 }
+
+button:hover { background: #00acc1; }
 
 .link {
   text-align: center;
@@ -52,55 +64,84 @@ button {
   color: #4fc3dc;
 }
 
+.link:hover { text-decoration: underline; }
+
+.forgot-btn {
+  width: 100%;
+  padding: 10px;
+  background: #f44336;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.forgot-btn:hover { background: #d32f2f; }
+
 .whatsapp {
   position: fixed;
   bottom: 10px;
   right: 10px;
   color: white;
   background: rgba(0,0,0,0.6);
-  padding: 8px;
+  padding: 8px 12px;
   border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
 }
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-  <!-- LOGIN FORM -->
+  <!-- LOGIN -->
   <div id="loginForm">
     <h2>Login</h2>
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Password">
-    <button>Login</button>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="login()">Login</button>
 
-    <div class="link" onclick="showRegister()">
-      Create Account
-    </div>
+    <div class="link" onclick="showRegister()">Create Account</div>
+
+    <button class="forgot-btn" onclick="resetPassword()">
+      Forgot Password?
+    </button>
   </div>
 
-  <!-- REGISTER FORM -->
+  <!-- REGISTER -->
   <div id="registerForm" style="display:none;">
     <h2>Create Account</h2>
-    <input type="text" placeholder="Full Name">
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Password">
-    <button>Register</button>
+    <input type="text" id="regName" placeholder="Full Name">
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Password">
+    <button onclick="register()">Register</button>
 
-    <div class="link" onclick="showLogin()">
-      Back to Login
-    </div>
+    <div class="link" onclick="showLogin()">Back to Login</div>
   </div>
 
 </div>
 
-<div class="whatsapp">
+<div class="whatsapp" onclick="openWhatsApp()">
   WhatsApp: +919332539948
 </div>
 
 <script>
+// 🔥 এখানে তোমার Firebase Config বসাও
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  appId: "YOUR_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// Form Toggle
 function showRegister() {
   document.getElementById("loginForm").style.display = "none";
   document.getElementById("registerForm").style.display = "block";
@@ -109,6 +150,51 @@ function showRegister() {
 function showLogin() {
   document.getElementById("loginForm").style.display = "block";
   document.getElementById("registerForm").style.display = "none";
+}
+
+// Register
+function register() {
+  const name = document.getElementById("regName").value;
+  const email = document.getElementById("regEmail").value;
+  const password = document.getElementById("regPassword").value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      userCredential.user.updateProfile({ displayName: name });
+      alert("Account created!");
+      showLogin();
+    })
+    .catch((error) => alert(error.message));
+}
+
+// Login
+function login() {
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      alert("Welcome " + userCredential.user.displayName);
+    })
+    .catch((error) => alert(error.message));
+}
+
+// Forgot Password
+function resetPassword() {
+  const email = document.getElementById("loginEmail").value;
+  if (!email) {
+    alert("Enter your email first");
+    return;
+  }
+
+  auth.sendPasswordResetEmail(email)
+    .then(() => alert("Password reset email sent"))
+    .catch((error) => alert(error.message));
+}
+
+// WhatsApp
+function openWhatsApp() {
+  window.open("https://wa.me/919332539948", "_blank");
 }
 </script>
 
